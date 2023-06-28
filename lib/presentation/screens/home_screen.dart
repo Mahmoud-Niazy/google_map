@@ -124,6 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ListTile(
                   onTap: () {
                     cubit.removeEveryThingToGoToYourLocation();
+                    CasheHelper.removeData(key: 'profileImage');
                     navigateAndFinish(route: '/', context: context, page: RegisterScreen());
                   },
                   leading: Icon(
