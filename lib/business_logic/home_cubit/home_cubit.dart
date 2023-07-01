@@ -9,10 +9,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_map/data_models/auto_complete_places_data_model.dart';
 import 'package:google_map/data_models/place_details_data_model.dart';
 import 'package:google_map/data_models/place_direction_data_model.dart';
+import 'package:google_map/data_models/searceh_place_data_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 import '../../cashe_helper/cashe_helper.dart';
+import '../../constants/constants.dart';
 import '../../dio_helper/dio_helper.dart';
 import '../../functions/functions.dart';
 import 'home_states.dart';
@@ -82,7 +85,7 @@ class HomeCubit extends Cubit<HomeStates> {
 
   Future? getPlaceDetails({
     required String placeId,
-    required Completer<GoogleMapController> mapController,
+    // required Completer<GoogleMapController> mapController,
   }) {
     emit(GetPlaceDetailsLoadingState());
     var uuid = Uuid().v4();
@@ -130,7 +133,7 @@ class HomeCubit extends Cubit<HomeStates> {
   }
 
   PlaceDirection? placeDirection;
-  Set <Polyline> polyLine = {};
+  Set<Polyline> polyLine = {};
 
   loadPlaceDirection({
     required LatLng origin,
@@ -150,8 +153,9 @@ class HomeCubit extends Cubit<HomeStates> {
         Polyline(
           polylineId: PolylineId('1'),
           width: 2,
-          points: placeDirection!.points.map((e) =>
-              LatLng(e.latitude, e.longitude)).toList(),
+          points: placeDirection!.points
+              .map((e) => LatLng(e.latitude, e.longitude))
+              .toList(),
         ),
       };
       emit(LoadPlaceDirectionSuccessfullyState());
@@ -169,25 +173,23 @@ class HomeCubit extends Cubit<HomeStates> {
     markers.clear();
     markers.add(
       Marker(
-          markerId: MarkerId('${ Uuid().v4()}'),
+          markerId: MarkerId('${Uuid().v4()}'),
           position: LatLng(userLocation.latitude, userLocation.longitude),
           infoWindow: InfoWindow(
             title: 'Your location',
           ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(200)
-      ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(200)),
     );
     markers.add(
       Marker(
-          markerId: MarkerId('${ Uuid().v4()}'),
+          markerId: MarkerId('${Uuid().v4()}'),
           position: LatLng(searchedPlace.latitude, searchedPlace.longitude),
           infoWindow: InfoWindow(
             title: 'Searched place',
           ),
           onTap: () {
             showTimeAndDate();
-          }
-      ),
+          }),
     );
     emit(AddMarkersState());
   }
@@ -217,21 +219,87 @@ class HomeCubit extends Cubit<HomeStates> {
       emit(GetPlaceDetailsSuccessfullyState());
       FirebaseStorage.instance
           .ref()
-          .child('images/${Uri
-          .file(profileImage!.path)
-          .pathSegments
-          .last}')
+          .child('images/${Uri.file(profileImage!.path).pathSegments.last}')
           .putFile(profileImage!)
           .then((value) {
-
         value.ref.getDownloadURL().then((value) {
           CasheHelper.saveData(key: 'profileImage', value: value);
           emit(UploadProfileImageSuccessfullyState());
         });
       });
-    }
-    else{
+    } else {
       emit(GetPlaceDetailsErrorState());
     }
   }
+
+  late Database database;
+
+  createDatabase() async {
+    emit(CreateTableLoadingState());
+    database = await openDatabase(
+      'places.db',
+      version: 1,
+      onCreate: (database, version) {
+        database
+            .execute(
+                'CREATE TABLE places (id INTEGER PRIMARY KEY , title TEXT , subTitle TEXT , placeId TEXT )')
+            .then((value) {
+          emit(CreateTableSuccessfullyState());
+        }).catchError((error) {
+          emit(CreateTableErrorState());
+        });
+      },
+      onOpen: (database) {
+        getDataFromDatabase(database);
+      },
+    );
+  }
+
+  insertIntoDatabase({
+    required String title,
+    required String subTitle,
+    required String placeId,
+  }) async {
+    emit(InsertIntoDatabaseLoadingState());
+    return await database.transaction((txn) {
+      return txn.rawInsert(
+          'INSERT INTO places( title , subTitle , placeId ) VALUES ("$title" , "$subTitle" , "$placeId" ) ');
+    }).then((value) {
+      getDataFromDatabase(database);
+      emit(InsertIntoDatabaseSuccessfullyState());
+    }).catchError((error) {
+      emit(InsertIntoDatabaseErrorState());
+    });
+  }
+
+  List<SearchedPlaceDataModel> places = [];
+
+  getDataFromDatabase(database) {
+    places = [];
+    emit(GetDataFromDatabaseLoadingState());
+    database.rawQuery('SELECT * FROM places').then((value) {
+      value.forEach((element) {
+        places.add(SearchedPlaceDataModel(
+          subTitle: element['subTitle'],
+          title: element['title'],
+          placeId: element['placeId'],
+        ));
+      });
+      emit(GetDataFromDatabaseSuccessfullyState());
+    }).catchError((error) {
+      emit(GetDataFromDatabaseErrorState());
+    });
+  }
+
+  // Future<void> clearDatabase() =>
+  //     databaseFactory.deleteDatabase('places.db');
+
+  // clearDatabase() {
+  //   emit(ClearDatabaseLoadingState());
+  //   database.rawDelete('DELETE FROM places').then((value) {
+  //     emit(ClearDatabaseSuccessfullyState());
+  //   }).catchError((error) {
+  //     emit(ClearDatabaseErrorState());
+  //   });
+  // }
 }

@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (context)=> PhoneAuthCubit()),
-            BlocProvider(create: (context)=> HomeCubit()),
+            BlocProvider(create: (context)=> HomeCubit()..createDatabase()),
           ],
           child: MaterialApp(
             initialRoute:  CasheHelper.getData(key: 'isRegisteredBefore') == true ? 'HomeScreen' : '/',

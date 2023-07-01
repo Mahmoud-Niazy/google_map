@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_map/business_logic/home_cubit/home_cubit.dart';
+import 'package:google_map/functions/functions.dart';
+
+import '../../data_models/searceh_place_data_model.dart';
 
 class BuildTextFormField extends StatelessWidget {
   late IconData prefixIcon;
   late String label;
-  TextInputType? keyboardType ;
-  late TextEditingController controller ;
-  String? Function(String?)? validator ;
+  TextInputType? keyboardType;
+
+  late TextEditingController controller;
+
+  String? Function(String?)? validator;
 
   BuildTextFormField({
     required this.label,
@@ -33,7 +39,6 @@ class BuildTextFormField extends StatelessWidget {
           prefixIcon,
         ),
         hintText: label,
-
       ),
     );
   }
@@ -48,7 +53,7 @@ class BuildButton extends StatelessWidget {
   BuildButton({
     required this.label,
     required this.onPressed,
-    this.width =100,
+    this.width = 100,
     this.height = 40,
   });
 
@@ -64,7 +69,7 @@ class BuildButton extends StatelessWidget {
         ),
         style: ButtonStyle(
           backgroundColor:
-          MaterialStateColor.resolveWith((states) => Colors.black),
+              MaterialStateColor.resolveWith((states) => Colors.black),
         ),
       ),
     );
@@ -101,25 +106,58 @@ class PageTransition extends PageRouteBuilder {
   late String route;
   Map? arguments;
 
-  PageTransition({
-    required this.page,
-    required this.route,
-    this.arguments
-  })
+  PageTransition({required this.page, required this.route, this.arguments})
       : super(
-      settings: RouteSettings(
-          name: route,
-          arguments: arguments,
-      ),
-      pageBuilder: (context, animation1, animation2) {
-        return page;
-      }, transitionsBuilder: (context, animation1, animation2, child) {
-    return SlideTransition(
-      position: animation1.drive(Tween<Offset>(
-        begin: Offset(-1, 0),
-        end: Offset(0, 0),
-      )),
-      child: child,
-    );
+            settings: RouteSettings(
+              name: route,
+              arguments: arguments,
+            ),
+            pageBuilder: (context, animation1, animation2) {
+              return page;
+            },
+            transitionsBuilder: (context, animation1, animation2, child) {
+              return SlideTransition(
+                position: animation1.drive(Tween<Offset>(
+                  begin: Offset(-1, 0),
+                  end: Offset(0, 0),
+                )),
+                child: child,
+              );
+            });
+}
+
+class SearchedPlaceModel extends StatelessWidget {
+  late SearchedPlaceDataModel place;
+
+  SearchedPlaceModel({
+    required this.place,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 10
+      ),
+      child: Card(
+        elevation: 10,
+        child: ListTile(
+          onTap: () {
+            navigatePop(context: context);
+            HomeCubit.get(context).getPlaceDetails(placeId: place.placeId);
+          },
+          title: Text(
+            place.title,
+          ),
+          subtitle: Text(
+            place.subTitle,
+          ),
+          trailing: Icon(
+            Icons.location_on_outlined,
+          ),
+        ),
+      ),
+    );
+  }
 }

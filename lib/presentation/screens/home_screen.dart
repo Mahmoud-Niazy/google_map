@@ -1,16 +1,17 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_map/presentation/screens/register_screen.dart';
+import 'package:google_map/presentation/screens/searched_places_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../business_logic/home_cubit/home_cubit.dart';
 import '../../business_logic/home_cubit/home_states.dart';
 import '../../cashe_helper/cashe_helper.dart';
+import '../../constants/constants.dart';
 import '../../functions/functions.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var mapController = Completer<GoogleMapController>();
+  // var mapController = Completer<GoogleMapController>();
   var searchController = FloatingSearchBarController();
 
   @override
@@ -117,7 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.grey,
                         ),
                       ),
-
                     ],
                   ),
                 ),
@@ -125,7 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     cubit.removeEveryThingToGoToYourLocation();
                     CasheHelper.removeData(key: 'profileImage');
-                    navigateAndFinish(route: '/', context: context, page: RegisterScreen());
+                    // cubit.clearDatabase();
+                    navigateAndFinish(
+                        route: '/', context: context, page: RegisterScreen());
                   },
                   leading: Icon(
                     Icons.person,
@@ -140,9 +142,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icons.login,
                   ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height - 310,
+                // SizedBox(
+                //   height: 15.h,
+                // ),
+                ListTile(
+                  onTap: () {
+                    navigate(
+                      route: 'SearchedPlacesScreen',
+                      context: context,
+                      page: SearchedPlacesScreen(),
+                    );
+                  },
+                  leading: Icon(
+                    Icons.location_on_outlined,
+                  ),
+                  title: Text(
+                    'Searched Places',
+                    style: TextStyle(
+                      fontSize: 17.sp,
+                    ),
+                  ),
                 ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height - 310.h,
+                ),
+
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 10,
@@ -186,8 +210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         zoom: 18.sp,
                       ),
                       zoomControlsEnabled: false,
-                      onMapCreated: (mapController) {
-                        this.mapController.complete(mapController);
+                      onMapCreated: (map_Controller) {
+                        mapController.complete(map_Controller);
                       },
                       polylines:
                           cubit.placeDirection != null ? cubit.polyLine : {},
@@ -247,7 +271,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                             searchController.close();
                                             cubit.getPlaceDetails(
                                               placeId: e.placeId,
-                                              mapController: mapController,
+                                              // mapController: mapController,
+                                            );
+                                            cubit.insertIntoDatabase(
+                                              title: e.title,
+                                              subTitle: e.body,
+                                              placeId: e.placeId,
                                             );
                                           },
                                           title: Text(

@@ -30,3 +30,19 @@ class UploadProfileImageSuccessfullyState extends HomeStates{}
 
 
 class ShowTimeAndDateState extends HomeStates{}
+
+class CreateTableLoadingState extends HomeStates{}
+class CreateTableSuccessfullyState extends HomeStates{}
+class CreateTableErrorState extends HomeStates{}
+
+class InsertIntoDatabaseLoadingState extends HomeStates{}
+class InsertIntoDatabaseSuccessfullyState extends HomeStates{}
+class InsertIntoDatabaseErrorState extends HomeStates{}
+
+class GetDataFromDatabaseLoadingState extends HomeStates{}
+class GetDataFromDatabaseSuccessfullyState extends HomeStates{}
+class GetDataFromDatabaseErrorState extends HomeStates{}
+
+class ClearDatabaseLoadingState extends HomeStates{}
+class ClearDatabaseSuccessfullyState extends HomeStates{}
+class ClearDatabaseErrorState extends HomeStates{}

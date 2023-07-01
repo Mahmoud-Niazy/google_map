@@ -49,6 +49,7 @@ dependencies:
   uuid: ^3.0.7
   flutter_polyline_points: ^1.0.0
   image_picker: any
+  sqflite: any
 
 
   # The following adds the Cupertino Icons font to your application.
