@@ -66,7 +66,7 @@ class HomeCubit extends Cubit<HomeStates> {
       query: {
         'input': input,
         'radius': 5000,
-        'key': 'AIzaSyDZnXt5NZJnsntMked4qGtDaBO2lVxuDWM',
+        'key': '',
         'components': 'country:eg',
         'types': 'address',
         'sessiontoken': '${uuid}',
@@ -95,7 +95,7 @@ class HomeCubit extends Cubit<HomeStates> {
         'place_id': placeId,
         'fields': 'geometry',
         'sessiontoken': '${uuid}',
-        'key': 'AIzaSyDZnXt5NZJnsntMked4qGtDaBO2lVxuDWM',
+        'key': '',
       },
     ).then((value) {
       placeDetails = PlaceDetails.fromJson(value.data);
@@ -145,7 +145,7 @@ class HomeCubit extends Cubit<HomeStates> {
       query: {
         'origin': '${origin.latitude},${origin.longitude}',
         'destination': '${destination.latitude},${destination.longitude}',
-        'key': 'AIzaSyDZnXt5NZJnsntMked4qGtDaBO2lVxuDWM'
+        'key': ''
       },
     ).then((value) {
       placeDirection = PlaceDirection.fromJson(value.data);
