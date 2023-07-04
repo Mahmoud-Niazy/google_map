@@ -6,7 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_map/presentation/screens/register_screen.dart';
 import 'package:google_map/presentation/screens/searched_places_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import '../../business_logic/home_cubit/home_cubit.dart';
 import '../../business_logic/home_cubit/home_states.dart';
