@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,8 @@ import '../../constants/constants.dart';
 import '../../functions/functions.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -26,15 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    super.initState();
     HomeCubit.get(context).getUserLocation();
+    mapController = Completer<GoogleMapController>();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
-      listener: (context, state) {
-        print(state);
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         var cubit = HomeCubit.get(context);
         return Scaffold(
@@ -42,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView(
               children: [
                 DrawerHeader(
-                  decoration: BoxDecoration(color: Colors.black12),
+                  decoration: const BoxDecoration(color: Colors.black12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -53,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               CircleAvatar(
                                 backgroundColor: Colors.white,
+                                radius: 40.sp,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -63,13 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                               null
                                           ? NetworkImage(CasheHelper.getData(
                                               key: 'profileImage'))
-                                          : NetworkImage(
+                                          : const NetworkImage(
                                               'https://img.freepik.com/free-icon/pin-geolocalization_318-9542.jpg?w=740&t=st=1687911749~exp=1687912349~hmac=2f6794fde6b13f1f23eca498444c4bc84f1f7b2280bf1e2a9c23bffab812f3eb',
                                             ),
                                     ),
                                   ),
                                 ),
-                                radius: 40.sp,
                               ),
                               CircleAvatar(
                                 backgroundColor: Colors.black,
@@ -93,27 +96,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 10.h,
                       ),
                       Text(
-                        CasheHelper.getData(key: 'name') != null
-                            ? CasheHelper.getData(key: 'name')
-                            : '',
+                        CasheHelper.getData(key: 'name') ?? '',
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        CasheHelper.getData(key: 'email') != null
-                            ? CasheHelper.getData(key: 'email')
-                            : '',
+                        CasheHelper.getData(key: 'email') ?? '',
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: Colors.grey,
                         ),
                       ),
                       Text(
-                        CasheHelper.getData(key: 'phone') != null
-                            ? CasheHelper.getData(key: 'phone')
-                            : '',
+                        CasheHelper.getData(key: 'phone') ?? '',
                         style: TextStyle(
                           fontSize: 12.sp,
                           color: Colors.grey,
@@ -130,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     navigateAndFinish(
                         route: '/', context: context, page: RegisterScreen());
                   },
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.person,
                   ),
                   title: Text(
@@ -139,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 17.sp,
                     ),
                   ),
-                  trailing: Icon(
+                  trailing: const Icon(
                     Icons.login,
                   ),
                 ),
@@ -151,10 +148,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     navigate(
                       route: 'SearchedPlacesScreen',
                       context: context,
-                      page: SearchedPlacesScreen(),
+                      page: const SearchedPlacesScreen(),
                     );
                   },
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.location_on_outlined,
                   ),
                   title: Text(
@@ -299,29 +296,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             top: 90.h,
                             child: Row(
                               children: [
-                                Container(
+                                SizedBox(
                                   height: 100.h,
                                   width: 150.w,
                                   child: Card(
+                                    margin: const EdgeInsets.all(20),
+                                    color: Colors.white,
                                     child: Center(
                                         child: Text(
-                                            '${cubit.placeDirection!.duration}')),
-                                    margin: EdgeInsets.all(20),
-                                    color: Colors.white,
+                                            cubit.placeDirection!.duration)),
                                   ),
                                 ),
                                 SizedBox(
                                   width: 50.w,
                                 ),
-                                Container(
+                                SizedBox(
                                   height: 100.h,
                                   width: 150.w,
                                   child: Card(
+                                    margin: const EdgeInsets.all(20),
+                                    color: Colors.white,
                                     child: Center(
                                         child: Text(
-                                            '${cubit.placeDirection!.distance}')),
-                                    margin: EdgeInsets.all(20),
-                                    color: Colors.white,
+                                            cubit.placeDirection!.distance)),
                                   ),
                                 ),
                               ],
@@ -330,12 +327,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         : Container(),
                   ],
                 )
-              : Center(
+              : const Center(
                   child: CircularProgressIndicator(),
                 ),
 
           floatingActionButton: FloatingActionButton(
-            child: Icon(
+            child: const Icon(
               Icons.location_on_outlined,
             ),
             onPressed: () {
@@ -359,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return IconButton(
       onPressed: () {
         lanchUrlOfIcon(
-          url: url,
+          link: url,
         );
       },
       icon: Icon(
@@ -370,10 +367,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   lanchUrlOfIcon({
-    required String url,
+    required String link,
   }) async {
-    await launch(url).then((value) {}).catchError((error) {
-      print(error);
-    });
+    final Uri url = Uri.parse(link);
+    if (!await launchUrl(url)) {
+      await launchUrl(
+        url,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Can\'t launch this url',
+          ),
+        ),
+      );
+    }
   }
 }

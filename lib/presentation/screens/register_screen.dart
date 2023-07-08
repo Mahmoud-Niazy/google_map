@@ -10,16 +10,17 @@ import '../../business_logic/phone_auth_cubit/phone_auth_states.dart';
 import '../../functions/functions.dart';
 
 class RegisterScreen extends StatelessWidget {
-  var phoneController = TextEditingController();
-  var emailController = TextEditingController();
-  var nameController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+  final phoneController = TextEditingController();
+  final emailController = TextEditingController();
+  final nameController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PhoneAuthCubit, PhoneAuthStates>(
       listener: (context, state) {
-        print(state);
         if (state is PhoneNumberVerifiedState) {
           CasheHelper.saveData(key: 'name', value: nameController.text);
           CasheHelper.saveData(key: 'email', value: emailController.text);
@@ -62,6 +63,7 @@ class RegisterScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return 'Name is empty ';
                       }
+                      return null ;
                     },
                   ),
                   SizedBox(
@@ -77,6 +79,7 @@ class RegisterScreen extends StatelessWidget {
                       if (value.length != 11) {
                         return 'Phone must be 11 number';
                       }
+                      return null ;
                     },
                     keyboardType: TextInputType.phone,
                     prefixIcon: Icons.phone,
@@ -91,6 +94,7 @@ class RegisterScreen extends StatelessWidget {
                       if (value!.isEmpty) {
                         return 'Email is empty ';
                       }
+                      return null ;
                     },
                     prefixIcon: Icons.email_outlined,
                   ),

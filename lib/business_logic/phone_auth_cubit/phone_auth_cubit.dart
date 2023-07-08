@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_map/business_logic/phone_auth_cubit/phone_auth_states.dart';
@@ -12,7 +11,7 @@ class PhoneAuthCubit extends Cubit<PhoneAuthStates> {
     required String phoneNumber,
   }) {
     FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+2${phoneNumber}',
+      phoneNumber: '+2$phoneNumber',
       verificationCompleted: verificationCompleted,
       verificationFailed: verificationFailed,
       codeSent: codeSent,
@@ -37,11 +36,11 @@ class PhoneAuthCubit extends Cubit<PhoneAuthStates> {
 
   codeAutoRetrievalTimeout(String error) {}
 
-  CheckCode({
+  checkCode({
     required String smsCode,
   }) {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: this.verificationId!,
+      verificationId: verificationId!,
       smsCode: smsCode,
     );
     FirebaseAuth.instance.signInWithCredential(credential).then((value) {

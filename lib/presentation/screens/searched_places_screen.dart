@@ -6,6 +6,8 @@ import 'package:google_map/presentation/widgets/widgets.dart';
 import '../../business_logic/home_cubit/home_states.dart';
 
 class SearchedPlacesScreen extends StatelessWidget {
+  const SearchedPlacesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,7 @@ class SearchedPlacesScreen extends StatelessWidget {
           return ListView.separated(
             itemBuilder: (context, index) =>
                 SearchedPlaceModel(place: cubit.places[index]),
-            separatorBuilder: (context, index) => SizedBox(
+            separatorBuilder: (context, index) => const SizedBox(
               height: 0,
             ),
             itemCount: cubit.places.length,

@@ -9,8 +9,10 @@ import '../../business_logic/phone_auth_cubit/phone_auth_states.dart';
 import 'check_otp_code_screen.dart';
 
 class LoginScreen extends StatelessWidget {
-  var phoneController = TextEditingController();
-  var formKey = GlobalKey<FormState>();
+  final phoneController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,6 @@ class LoginScreen extends StatelessWidget {
             route: 'CheckCodeScreen',
           );
         }
-        print(state);
       },
       builder: (context, state) {
         var cubit = PhoneAuthCubit.get(context);
@@ -49,6 +50,7 @@ class LoginScreen extends StatelessWidget {
                       if (value.length != 11) {
                         return 'Phone must be 11 number';
                       }
+                      return null ;
                     },
                   ),
                   SizedBox(

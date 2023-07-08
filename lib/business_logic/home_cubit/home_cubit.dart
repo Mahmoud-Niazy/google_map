@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -59,7 +58,7 @@ class HomeCubit extends Cubit<HomeStates> {
   getAutoCompletePlaces({
     required String input,
   }) {
-    var uuid = Uuid().v4();
+    var uuid =  Uuid().v4();
     emit(GetAutoCompletePlacesLoadingState());
     DioHelper.getData(
       path: 'place/autocomplete/json',
@@ -69,14 +68,12 @@ class HomeCubit extends Cubit<HomeStates> {
         'key': '',
         'components': 'country:eg',
         'types': 'address',
-        'sessiontoken': '${uuid}',
+        'sessiontoken': uuid,
       },
     ).then((value) {
-      print(uuid);
       autoCompletePlaces = AutoCompletePlaces.fromJson(value.data);
       emit(GetAutoCompletePlacesSuccessfullyState());
     }).catchError((error) {
-      print(error);
       emit(GetAutoCompletePlacesErrorState());
     });
   }
@@ -94,7 +91,7 @@ class HomeCubit extends Cubit<HomeStates> {
       query: {
         'place_id': placeId,
         'fields': 'geometry',
-        'sessiontoken': '${uuid}',
+        'sessiontoken': uuid,
         'key': '',
       },
     ).then((value) {
@@ -151,7 +148,7 @@ class HomeCubit extends Cubit<HomeStates> {
       placeDirection = PlaceDirection.fromJson(value.data);
       polyLine = {
         Polyline(
-          polylineId: PolylineId('1'),
+          polylineId: const PolylineId('1'),
           width: 2,
           points: placeDirection!.points
               .map((e) => LatLng(e.latitude, e.longitude))
@@ -173,18 +170,18 @@ class HomeCubit extends Cubit<HomeStates> {
     markers.clear();
     markers.add(
       Marker(
-          markerId: MarkerId('${Uuid().v4()}'),
+          markerId: MarkerId(Uuid().v4()),
           position: LatLng(userLocation.latitude, userLocation.longitude),
-          infoWindow: InfoWindow(
+          infoWindow: const InfoWindow(
             title: 'Your location',
           ),
           icon: BitmapDescriptor.defaultMarkerWithHue(200)),
     );
     markers.add(
       Marker(
-          markerId: MarkerId('${Uuid().v4()}'),
+          markerId: MarkerId(Uuid().v4()),
           position: LatLng(searchedPlace.latitude, searchedPlace.longitude),
-          infoWindow: InfoWindow(
+          infoWindow: const InfoWindow(
             title: 'Searched place',
           ),
           onTap: () {

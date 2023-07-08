@@ -6,15 +6,15 @@ import 'package:google_map/functions/functions.dart';
 import '../../data_models/searceh_place_data_model.dart';
 
 class BuildTextFormField extends StatelessWidget {
-  late IconData prefixIcon;
-  late String label;
-  TextInputType? keyboardType;
+   final  IconData prefixIcon;
+   final  String label;
+  final TextInputType? keyboardType;
 
-  late TextEditingController controller;
+   final TextEditingController controller;
 
-  String? Function(String?)? validator;
+  final String? Function(String?)? validator;
 
-  BuildTextFormField({
+  const BuildTextFormField({super.key,
     required this.label,
     required this.prefixIcon,
     this.keyboardType,
@@ -29,12 +29,12 @@ class BuildTextFormField extends StatelessWidget {
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Colors.black,
           ),
         ),
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         prefixIcon: Icon(
           prefixIcon,
         ),
@@ -45,12 +45,12 @@ class BuildTextFormField extends StatelessWidget {
 }
 
 class BuildButton extends StatelessWidget {
-  late String label;
-  late void Function()? onPressed;
-  double width;
-  double height;
+  final  String label;
+  final  void Function()? onPressed;
+  final double width;
+  final double height;
 
-  BuildButton({
+   const BuildButton({super.key,
     required this.label,
     required this.onPressed,
     this.width = 100,
@@ -59,17 +59,17 @@ class BuildButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: height.h,
       width: width.w,
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Text(
-          label,
-        ),
         style: ButtonStyle(
           backgroundColor:
               MaterialStateColor.resolveWith((states) => Colors.black),
+        ),
+        child: Text(
+          label,
         ),
       ),
     );
@@ -77,10 +77,10 @@ class BuildButton extends StatelessWidget {
 }
 
 class BuildTextButton extends StatelessWidget {
-  late void Function()? onPressed;
-  late String label;
+  final void Function()? onPressed;
+  final String label;
 
-  BuildTextButton({
+  const BuildTextButton({super.key,
     required this.onPressed,
     required this.label,
   });
@@ -118,8 +118,8 @@ class PageTransition extends PageRouteBuilder {
             transitionsBuilder: (context, animation1, animation2, child) {
               return SlideTransition(
                 position: animation1.drive(Tween<Offset>(
-                  begin: Offset(-1, 0),
-                  end: Offset(0, 0),
+                  begin: const Offset(-1, 0),
+                  end: const Offset(0, 0),
                 )),
                 child: child,
               );
@@ -127,9 +127,9 @@ class PageTransition extends PageRouteBuilder {
 }
 
 class SearchedPlaceModel extends StatelessWidget {
-  late SearchedPlaceDataModel place;
+   final SearchedPlaceDataModel place;
 
-  SearchedPlaceModel({
+  const SearchedPlaceModel({super.key,
     required this.place,
   });
 
@@ -153,7 +153,7 @@ class SearchedPlaceModel extends StatelessWidget {
           subtitle: Text(
             place.subTitle,
           ),
-          trailing: Icon(
+          trailing: const Icon(
             Icons.location_on_outlined,
           ),
         ),

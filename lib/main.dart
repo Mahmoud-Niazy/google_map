@@ -15,10 +15,12 @@ void main() async{
   Firebase.initializeApp();
   await CasheHelper.init();
   DioHelper.init();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -37,14 +39,14 @@ class MyApp extends StatelessWidget {
             initialRoute:  CasheHelper.getData(key: 'isRegisteredBefore') == true ? 'HomeScreen' : '/',
             routes: routes,
             theme: ThemeData(
-              appBarTheme: AppBarTheme(
+              appBarTheme: const AppBarTheme(
                 backgroundColor: Colors.white,
                 elevation: 0,
                 iconTheme: IconThemeData(
                   color: Colors.black,
                 ),
               ),
-              floatingActionButtonTheme: FloatingActionButtonThemeData(
+              floatingActionButtonTheme: const FloatingActionButtonThemeData(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
               ),

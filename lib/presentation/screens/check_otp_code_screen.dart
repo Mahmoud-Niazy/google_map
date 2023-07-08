@@ -10,20 +10,21 @@ import '../../functions/functions.dart';
 import 'home_screen.dart';
 
 class CheckCodeScreen extends StatelessWidget {
-  var codeController = TextEditingController();
+  final codeController = TextEditingController();
+
+  CheckCodeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PhoneAuthCubit, PhoneAuthStates>(
       listener: (context, state) async {
-        print(state);
         if(state is PhoneAuthSuccessfullyState){
           Fluttertoast.showToast(msg: 'Successfully').then((value) {
             CasheHelper.saveData(key: 'isRegisteredBefore', value: true);
             navigateAndFinish(
               route: 'Home',
               context: context,
-              page: HomeScreen(),
+              page: const HomeScreen(),
             );
           });
         }
@@ -73,11 +74,11 @@ class CheckCodeScreen extends StatelessWidget {
                       inactiveFillColor: Colors.white,
                       activeFillColor: Colors.black45,
                       activeColor: Colors.black45),
-                  animationDuration: Duration(milliseconds: 300),
+                  animationDuration: const Duration(milliseconds: 300),
                   enableActiveFill: true,
                   controller: codeController,
                   onCompleted: (v) {
-                    cubit.CheckCode(
+                    cubit.checkCode(
                       smsCode: codeController.text,
                     );
                   },

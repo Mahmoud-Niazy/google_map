@@ -10,8 +10,8 @@ import '../presentation/screens/register_screen.dart';
 Map<String, Widget Function(BuildContext)> routes = {
   '/': (context) => RegisterScreen(),
   'CheckCodeScreen' : (context) => CheckCodeScreen(),
-  'HomeScreen' : (context) => HomeScreen(),
-  'SearchedPlacesScreen' : (context) => SearchedPlacesScreen(),
+  'HomeScreen' : (context) => const HomeScreen(),
+  'SearchedPlacesScreen' : (context) => const SearchedPlacesScreen(),
 };
 
 
